@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البطاقة التقنية القانونية - الشركات التجارية</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts (Cairo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#0A192F',
+                            900: '#0F172A',
+                            950: '#020617',
+                        },
+                        gold: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                            700: '#A16207',
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #0b1329;
+            color: #f3f4f6;
+        }
+
+        /* Golden gradient background effect */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFE259 0%, #FFA751 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border-gradient {
+            border-image: linear-gradient(to bottom, #EAB308, #A16207) 1;
+        }
+
+        /* Glassmorphism styles */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+        }
+
+        .glass-input {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
+        .glass-input:focus {
+            border-color: #EAB308;
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.3);
+        }
+
+        /* Print styling rules */
+        @media print {
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+            #lock-screen, #controls-section, .no-print {
+                display: none !important;
+            }
+            #main-content {
+                display: block !important;
+                opacity: 1 !important;
+            }
+            .glass-card {
+                background: #ffffff !important;
+                border: 1px solid #d1d5db !important;
+                color: #111827 !important;
+                box-shadow: none !important;
+                break-inside: avoid;
+                margin-bottom: 1rem;
+            }
+            .gold-gradient-text {
+                -webkit-text-fill-color: #92400e !important;
+            }
+            .legal-source-badge {
+                background-color: #f3f4f6 !important;
+                color: #1f2937 !important;
+                border: 1px solid #9ca3af !important;
+            }
+            .answer-box {
+                background-color: #f9fafb !important;
+                color: #1f2937 !important;
+                border-right-color: #d97706 !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-gold-500 selection:text-navy-950">
+
+    <!-- ==================== LOCK SCREEN SECTION ==================== -->
+    <div id="lock-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/90 backdrop-blur-xl transition-all duration-500">
+        <div class="glass-card w-full max-w-md rounded-2xl p-8 shadow-2xl text-center relative overflow-hidden border border-gold-500/30">
+            <!-- Decorative Glow Header -->
+            <div class="absolute -top-12 -left-12 w-32 h-32 bg-gold-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-gold-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 shadow-inner">
+                <i class="fa-solid fa-scale-balanced text-4xl"></i>
+            </div>
+
+            <h2 class="text-2xl font-bold text-white mb-1">البطاقة التقنية القانونية</h2>
+            <p class="text-gray-400 text-sm mb-6">منصة الاستشارات والتحليل القانوني للشركات</p>
+
+            <!-- Password Form -->
+            <form id="login-form" onsubmit="unlockCard(event)" class="space-y-4">
+                <div class="relative">
+                    <label for="passcode" class="block text-right text-xs text-gray-300 font-semibold mb-2">أدخل رمز الدخول السري:</label>
+                    <div class="relative">
+                        <input type="password" id="passcode" placeholder="••••••" maxlength="6" 
+                            class="glass-input w-full px-4 py-3 text-center text-xl font-bold tracking-widest text-white rounded-xl focus:outline-none transition-all duration-300 placeholder-gray-600"
+                            autocomplete="off">
+                        <button type="button" onclick="togglePasscodeVisibility()" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gold-400 transition-colors">
+                            <i id="eye-icon" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="error-message" class="hidden text-red-400 text-xs text-center font-medium bg-red-950/40 border border-red-500/30 rounded-lg p-2.5 animate-pulse">
+                    <i class="fa-solid fa-circle-exclamation ml-1"></i> رمز الدخول غير صحيح! حاول مرة أخرى.
+                </div>
+
+                <button type="submit" 
+                    class="w-full py-3.5 bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 hover:from-gold-500 hover:to-gold-300 text-navy-950 font-bold rounded-xl shadow-lg shadow-gold-500/20 hover:shadow-gold-500/40 transition-all duration-300 transform active:scale-98 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock-open"></i>
+                    <span>فتح البطاقة التقنية</span>
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-gray-400">
+                <i class="fa-solid fa-shield-halved text-gold-500/70 ml-1"></i> محتوى محمي وفق التشريع التجاري الجزائري
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== MAIN CONTENT SECTION ==================== -->
+    <div id="main-content" class="hidden min-h-screen flex flex-col justify-between opacity-0 transition-opacity duration-700">
+        
+        <!-- TOP HEADER -->
+        <header class="border-b border-gold-500/20 bg-navy-900/80 backdrop-blur-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-12 h-12 rounded-xl bg-gold-500/10 border border-gold-500/40 flex items-center justify-center text-gold-400">
+                        <i class="fa-solid fa-gavel text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-black text-white tracking-wide">البطاقة التقنية القانونية</h1>
+                        <p class="text-xs text-gold-400/90 font-medium">النظام القانوني للشركات التجارية في القانون الجزائري</p>
+                    </div>
+                </div>
+
+                <!-- Header Actions -->
+                <div id="controls-section" class="flex items-center gap-3">
+                    <button onclick="printCard()" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-gray-200 border border-slate-700 text-sm font-semibold transition-all flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-print text-gold-400"></i>
+                        <span class="hidden sm:inline">طباعة / تصدير PDF</span>
+                    </button>
+                    <button onclick="lockApp()" class="px-3 py-2 rounded-lg bg-red-950/40 hover:bg-red-900/50 text-red-300 border border-red-500/30 text-sm font-semibold transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>قفل</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN CONTAINER -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full space-y-8">
+            
+            <!-- HERO / INFO CARD -->
+            <section class="glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden border border-gold-500/30">
+                <div class="absolute -left-16 -top-16 w-64 h-64 bg-gold-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                    <div class="md:col-span-2 space-y-3">
+                        <span class="inline-block px-3 py-1 bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-bold rounded-full">
+                            دليل استشاري وتطبيقي
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">تحليل الإطار القانوني لتسيير وتنظيم الشركات</h2>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            تتضمن هذه البطاقة دراسة تقنية دقيقة لأهم الأسئلة التطبيقية والمقارنة المتعلقة بالصلاحيات، المسؤوليات، وحماية الشركاء وفقاً لأحكام القانون التجاري الجزائري.
+                        </p>
+                    </div>
+                    <div class="flex flex-col justify-center gap-2 bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-xs">
+                        <div class="flex justify-between text-gray-300">
+                            <span>المرجع التشريعي:</span>
+                            <span class="font-bold text-gold-400">القانون التجاري الجزائري</span>
+                        </div>
+                        <div class="flex justify-between text-gray-300">
+                            <span>حالة الملف:</span>
+                            <span class="font-bold text-green-400"><i class="fa-solid fa-circle-check ml-1"></i> معتمد ومكتمل</span>
+                        </div>
+                        <div class="flex justify-between text-gray-300">
+                            <span>إجمالي المحاور:</span>
+                            <span class="font-bold text-white">12 سؤالاً شاملاً</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEARCH AND FILTER BAR -->
+            <section class="no-print glass-card p-4 rounded-xl flex flex-col md:flex-row gap-4 justify-between items-center">
+                <div class="relative w-full md:w-96">
+                    <input type="text" id="search-input" onkeyup="filterQuestions()" placeholder="بحث في الأسئلة، الإجابات، أو المواد..." 
+                        class="glass-input w-full pr-10 pl-4 py-2.5 rounded-lg text-sm text-white placeholder-gray-400 focus:outline-none">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                </div>
+
+                <!-- Section Filter Pills -->
+                <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                    <button onclick="filterCategory('all')" class="filter-btn active-filter px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-gold-500 text-navy-950 shadow-md">
+                        الكل (12)
+                    </button>
+                    <button onclick="filterCategory('analytical')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">
+                        تحليلية
+                    </button>
+                    <button onclick="filterCategory('critical')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">
+                        نقدية
+                    </button>
+                    <button onclick="filterCategory('app')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">
+                        تطبيقية
+                    </button>
+                    <button onclick="filterCategory('comp')" class="filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">
+                        مقارنة واستنتاجية
+                    </button>
+                </div>
+            </section>
+
+            <!-- QUESTIONS DISPLAY AREA -->
+            <div id="questions-container" class="space-y-8">
+                
+                <!-- SECTION 1: ANALYTICAL QUESTIONS -->
+                <section class="category-group space-y-4" data-category="analytical">
+                    <div class="flex items-center gap-3 border-r-4 border-gold-500 pr-3 py-1">
+                        <i class="fa-solid fa-magnifying-glass-chart text-gold-400 text-xl"></i>
+                        <h3 class="text-xl font-bold text-white">أولاً: أسئلة تحليلية</h3>
+                    </div>
+
+                    <!-- Q1 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="مسؤولية الشريك حصته رأس المال الاستثمار الأمان الاقتصادي الذمة المالية 564">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">1</span>
+                                <span>لماذا حدد المشرّع مسؤولية الشريك بقدر حصته في رأس المال؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المادة 564 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            لتشجيع الاستثمار وتحديد المخاطر المالية للمستثمر بحد أقصى هو قيمة مشاركته فقط، وتوفير الأمان الاقتصادي دون تعريض الذمة المالية الشخصية للشريك للمخاطر أو حجز الدائنين عليها.
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="التنازل عن الحصص الاعتبار الشخصي أغلبية الشركاء 571">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">2</span>
+                                <span>ما سبب تقييد حرية التنازل عن الحصص للغير؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المادة 571 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            الحفاظ على الاعتبار الشخصي وثقة الشركاء فيما بينهم ومنع دخول أغراب عن الشركة إلا بموافقة أغلبية الشركاء الممُثلين لأغلبية رأس المال (أو شرط الأغلبية المحدد قانوناً).
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="العلاقة القانونية وكالة الشركاء المسير الجمعية العامة 576 577 578">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">3</span>
+                                <span>ما طبيعة العلاقة القانونية بين الشركاء والمسير؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المواد 576 و577 و578 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            علاقة وكالة تنظيمية قانونية؛ حيث يُعتبر المسير وكيلاً عن الشركة والشركاء في إدارة أعمال الشركة وتنفيذ قرارات الجمعية العامة، ويكون مسؤولاً أمامهم مدنياً وجزائياً عن أخطاء الإدارة.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: CRITICAL QUESTIONS -->
+                <section class="category-group space-y-4" data-category="critical">
+                    <div class="flex items-center gap-3 border-r-4 border-gold-500 pr-3 py-1">
+                        <i class="fa-solid fa-clipboard-check text-gold-400 text-xl"></i>
+                        <h3 class="text-xl font-bold text-white">ثانياً: أسئلة نقدية</h3>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="المسؤولية المحدودة حماية الدائنين رأس المال الضمانات 564 590">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">1</span>
+                                <span>هل تحقق المسؤولية المحدودة حماية كافية للشركاء والدائنين؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المواد 564 و 590 مكرر من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            تحمي الشركاء بشكل ممتاز من الخسائر الشخصية، لكنها قد تضر بالدائنين المتعاملين مع الشركة في حالة قلة رأس المال الإسمي، مما يدفع الدائنين غالبًا للمطالبة بضمانات شخصية كالتأمين أو الكفالة الشخصية للمسير/الشركاء.
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="صلاحيات المسير واسعة الغير القانون الأساسي 577 578">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">2</span>
+                                <span>هل صلاحيات مسير الشركة واسعة أكثر من اللازم؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المادتان 577 و578 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            صلاحياته واسعة تجاه الغير لضمان استقرار المعاملات واستمرار الإدارة، ولكنها مقيدة بتحديد أغراض الشركة الصريحة في القانون الأساسي، ومراقبة الجمعية العامة وحق الشركاء في عزله ومحاسبته.
+                        </div>
+                    </div>
+
+                    <!-- Q6 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="حماية الأقلية الاطلاع الجمعيات دعوى المسؤولية 581 585 588">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">3</span>
+                                <span>هل يوفر التنظيم القانوني الحالي حماية كافية للأقلية من الشركاء؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المواد 581 و 585 و 588 تجاري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            يوفر حماية نسبية من خلال حق الاطلاع على الوثائق والمستندات، وحق طلب عقد الجمعيات العامة، وحق رفع دعوى المسؤولية ضد المسير، إلا أن سيطرة الأغلبية على القرارات العادية قد تحد من فاعلية الأقلية.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: APPLIED QUESTIONS -->
+                <section class="category-group space-y-4" data-category="app">
+                    <div class="flex items-center gap-3 border-r-4 border-gold-500 pr-3 py-1">
+                        <i class="fa-solid fa-briefcase text-gold-400 text-xl"></i>
+                        <h3 class="text-xl font-bold text-white">ثالثاً: أسئلة تطبيقية</h3>
+                    </div>
+
+                    <!-- Q7 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="خطأ المسير ضرر مسؤولية مدنية جزائية 578">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">1</span>
+                                <span>من يتحمل المسؤولية إذا ارتكب المسير خطأ ألحق ضرراً بالشركة؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المادة 578 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            يتحمل المسير المسؤولية الشخصية (المدنية والجزائية) عن مخالفتهم للأحكام القانونية أو التنظيمية أو مخالفة القانون الأساسي للشركة أو عن الأخطاء المرتكبة في الإدارة، ويُصرف التعويض للشركة.
+                        </div>
+                    </div>
+
+                    <!-- Q8 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="رفض التنازل شراء الحصص 3 أشهر 571">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">2</span>
+                                <span>ماذا يحدث إذا رفض الشركاء الموافقة على التنازل عن حصة أحدهم للغير؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المادة 571 فقرة 3 و4 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            يلتزم الشركاء الآخرون بشراء الحصص أو جعل الشركة تشتريها وتخفض رأس مالها بقيمتها خلال أجل 3 أشهر من تاريخ الرفض، وإذا انقضى الأجل دون الشراء جاز للشريك المتنازل إتمام البيع للغير.
+                        </div>
+                    </div>
+
+                    <!-- Q9 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="خسائر نصف رأس المال 1/2 حل الشركة 4 أشهر 589">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">3</span>
+                                <span>ما الإجراءات المتخذة إذا بلغت خسائر الشركة مستوى يهدد استمرارها؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المادة 589 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            إذا بلغت الخسائر نصف (1/2) رأس المال، يجب على المسير دعوة الجمعية العامة غير العادية خلال 4 أشهر للبت في حل الشركة المبكر أو استمرارها مع تخفيض/زيادة رأس المال لإعادة التوازن.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: COMPARATIVE AND INFERENTIAL QUESTIONS -->
+                <section class="category-group space-y-4" data-category="comp">
+                    <div class="flex items-center gap-3 border-r-4 border-gold-500 pr-3 py-1">
+                        <i class="fa-solid fa-code-compare text-gold-400 text-xl"></i>
+                        <h3 class="text-xl font-bold text-white">رابعاً: أسئلة مقارنة واستنتاجية</h3>
+                    </div>
+
+                    <!-- Q10 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="الفرق SARL SNC التضامن تاجر 551 564">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">1</span>
+                                <span>ما الفرق بين الشركة ذات المسؤولية المحدودة وشركة التضامن؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المواد 551 و 564 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            في SARL تكون مسؤولية الشريك محدودة بقدر حصته ولا يكتسب صفة التاجر، وتنتقل الحصص بشروط. بينما في شركة التضامن تكون مسؤولية الشريك شخصية وتضامنية ومطلقة عن جميع ديون الشركة ويكتسب الشريك صفة التاجر.
+                        </div>
+                    </div>
+
+                    <!-- Q11 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="الحصص الاجتماعية الأسهم تداول البورصة SPA 568 686">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">2</span>
+                                <span>ما الفرق بين الحصص الاجتماعية والأسهم؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: المادتان 568 و686 من القانون التجاري الجزائري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            الحصص الاجتماعية اسمية ولا تجسد في سندات قابلة للتداول بحرية في البورصة ويشترط التنازل عنها إجراءات رسمية وموافقة الشركاء (SARL). أما الأسهم فهي سندات قابلة للتداول بحرية وطرق سريعة في شركات الأموال (SPA).
+                        </div>
+                    </div>
+
+                    <!-- Q12 -->
+                    <div class="question-card glass-card rounded-xl p-6 transition-all duration-300 hover:border-gold-500/50" data-keywords="شركات أشخاص أموال هجينة اعتبار شخصي 564 571">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <h4 class="text-lg font-bold text-gold-400 flex items-start gap-2">
+                                <span class="bg-gold-500/10 text-gold-400 px-2.5 py-0.5 rounded text-sm font-extrabold border border-gold-500/20">3</span>
+                                <span>هل الشركة ذات المسؤولية المحدودة أقرب إلى شركات الأشخاص أم شركات الأموال؟ ولماذا؟</span>
+                            </h4>
+                            <span class="legal-source-badge px-3 py-1 rounded-full bg-slate-800/90 text-gold-400 border border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 self-start md:self-auto">
+                                <i class="fa-solid fa-book-bookmark text-gold-500"></i>
+                                المصدر: التحليل الاستنتاجي للمادتين 564 و571 تجاري
+                            </span>
+                        </div>
+                        <div class="answer-box bg-slate-900/60 rounded-lg p-4 border-r-2 border-gold-500 text-gray-200 text-sm leading-relaxed">
+                            <strong class="text-white block mb-1"><i class="fa-solid fa-circle-check text-green-400 ml-1"></i> الإجابة النموذجية:</strong>
+                            هي شركة ذات طبيعة مختلطة (هجينة)؛ فهي تقترب من شركات الأموال تحديداً في مسؤولية الشركاء المحدودة برأس المال، وتقترب من شركات الأشخاص في تقييد انتقال الحصص والاعتبار الشخصي الملحوظ بين الشركاء.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- NO RESULTS FOUND MESSAGE -->
+                <div id="no-results" class="hidden glass-card rounded-xl p-8 text-center text-gray-400">
+                    <i class="fa-solid fa-folder-open text-4xl mb-3 text-gold-500/40"></i>
+                    <p class="text-base font-semibold">لم يتم العثور على أي أسئلة تطابق بحثك.</p>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="border-t border-gold-500/20 bg-navy-950 py-6 text-center text-xs text-gray-400">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+                <div>
+                    <span>البطاقة التقنية القانونية © 2026 - جميع الحقوق محفوظة</span>
+                </div>
+                <div class="flex items-center gap-4 text-gold-400/80">
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-gavel"></i> استشارات قانونية</span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-shield"></i> دقة تشريعية</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        const SECRET_CODE = "070405";
+
+        // Auto focus on input on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('passcode').focus();
+        });
+
+        // Toggle passcode visibility
+        function togglePasscodeVisibility() {
+            const passcodeInput = document.getElementById('passcode');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passcodeInput.type === 'password') {
+                passcodeInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passcodeInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Unlock action
+        function unlockCard(e) {
+            e.preventDefault();
+            const inputVal = document.getElementById('passcode').value.trim();
+            const errorMsg = document.getElementById('error-message');
+            const lockScreen = document.getElementById('lock-screen');
+            const mainContent = document.getElementById('main-content');
+
+            if (inputVal === SECRET_CODE) {
+                errorMsg.classList.add('hidden');
+                
+                // Animate lockscreen exit
+                lockScreen.classList.add('opacity-0', 'pointer-events-none');
+                
+                setTimeout(() => {
+                    lockScreen.classList.add('hidden');
+                    mainContent.classList.remove('hidden');
+                    setTimeout(() => {
+                        mainContent.classList.remove('opacity-0');
+                    }, 50);
+                }, 400);
+
+            } else {
+                errorMsg.classList.remove('hidden');
+                document.getElementById('passcode').value = '';
+                document.getElementById('passcode').focus();
+                
+                // Shake effect on card
+                const card = lockScreen.querySelector('.glass-card');
+                card.classList.add('animate-bounce');
+                setTimeout(() => card.classList.remove('animate-bounce'), 500);
+            }
+        }
+
+        // Lock App
+        function lockApp() {
+            const lockScreen = document.getElementById('lock-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            mainContent.classList.add('opacity-0');
+            setTimeout(() => {
+                mainContent.classList.add('hidden');
+                lockScreen.classList.remove('hidden', 'pointer-events-none');
+                setTimeout(() => {
+                    lockScreen.classList.remove('opacity-0');
+                    document.getElementById('passcode').value = '';
+                    document.getElementById('passcode').focus();
+                }, 50);
+            }, 300);
+        }
+
+        // Filter by category buttons
+        function filterCategory(category) {
+            // Update active button UI
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-gold-500', 'text-navy-950', 'shadow-md');
+                btn.classList.add('bg-slate-800', 'text-gray-300');
+            });
+            event.currentTarget.classList.remove('bg-slate-800', 'text-gray-300');
+            event.currentTarget.classList.add('bg-gold-500', 'text-navy-950', 'shadow-md');
+
+            const groups = document.querySelectorAll('.category-group');
+            let hasVisible = false;
+
+            groups.forEach(group => {
+                if (category === 'all' || group.getAttribute('data-category') === category) {
+                    group.classList.remove('hidden');
+                    hasVisible = true;
+                } else {
+                    group.classList.add('hidden');
+                }
+            });
+
+            // Re-apply search filter if input is not empty
+            filterQuestions();
+        }
+
+        // Live Search Filter
+        function filterQuestions() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.question-card');
+            const groups = document.querySelectorAll('.category-group');
+            const noResults = document.getElementById('no-results');
+            let matchCount = 0;
+
+            cards.forEach(card => {
+                const keywords = card.getAttribute('data-keywords').toLowerCase();
+                const textContent = card.innerText.toLowerCase();
+                
+                // Check if card belongs to active category group
+                const parentGroup = card.closest('.category-group');
+                const isGroupVisible = !parentGroup.classList.contains('hidden');
+
+                if (isGroupVisible && (keywords.includes(query) || textContent.includes(query))) {
+                    card.classList.remove('hidden');
+                    matchCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // Toggle No Results display
+            if (matchCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        // Print function
+        function printCard() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
